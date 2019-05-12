@@ -79,19 +79,25 @@ class HashTable(object):
 
     def get(self, key):
         """Return the value associated with the given key, or raise KeyError.
-        TODO: Running time: O(???) Why and under what conditions?"""
-        # Runtime: O(1) --> uses contains to loacate key
-        if self.contains(key):
-            bucket = self.buckets[self._bucket_index(key)]
-            return bucket.find(key)
-        else:
+        Best case running time: O(1) if entry is not found
+        Worst case running time: O(n) because we use the len() function if the entry is found"""
+        # Find the bucket the given key belongs in
+        index = self._bucket_index(key)
+        bucket = self.buckets[index]
+        # Find the entry with the given key in that bucket, if one exists
+        entry = bucket.find(lambda key_value: key_value[0] == key)
+        if entry is not None:  # Found
+            # Return the given key's associated value
+            assert isinstance(entry, tuple)
+            assert len(entry) == 2
+            return entry[1]
+        else:  # Not found
             raise KeyError('Key not found: {}'.format(key))
 
     def set(self, key, value):
         # Runtime: O(1)
         index = self._bucket_index(key)
         key_value = (key, value)
-        print(key_value)
         try:
             self.buckets[index].replace(lambda item: item[0] == key, key_value)
         except ValueError:

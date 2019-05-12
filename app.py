@@ -3,15 +3,17 @@ from hashtable import HashTable
 
 def open_target_phone_numbers(filename):
     """opens a file with phone numbers for testing"""
-    with open(filename) as file:
-        lines = file.read()
+    target = ('data/'+filename)
+    with open(target) as file:
+        lines = [line.rstrip('\n') for line in open(target)]
     return lines
 
 def get_costs(filename):
     """Takes cost and imports into hashtable"""
     prefix_cost = HashTable()
-    with open('data/'filename) as file:
-        lines = [line.rstrip('\n') for line in open('filename')]
+    f_name=('data/'+ filename)
+    with open(f_name) as file:
+        lines = [line.rstrip('\n') for line in open(f_name)]
         for i in lines:
             i = i.split(',')
             prefix_cost.set(i[0], i[1])
@@ -20,16 +22,22 @@ def get_costs(filename):
 
 def cost_return(numbers, hashtable):
     """take in a phone number and return the costs based on
-    the dictionary referance"""
+    the dictionary referance
+        time complexity: O(n)"""
     results = []
-    for i in numbers:
-        for j in reverse(range(9)):
-            if hashtable.contains(i[:j]):
-                results.append(hashtable.get(i))
+    for num in numbers:
+        for j in range(11, 0, -1):
+            if hashtable.contains(num[:j]):
+                results.append(( num, hashtable.get(num[:j])))
 
+    return results
+
+def tester_loop(phone_number):
+    for j in range(11, 0, -1):
+        print(phone_number[:j])
 
 if __name__ == '__main__':
-    get_costs('route-costs-10.txt')
-    dictionary = get_dictionary("route-costs-4.txt")
-    numbers = open_phone_numbers("phone-numbers-3.txt")
+    dictionary = get_costs('route-costs-10.txt')
+    numbers = open_target_phone_numbers("phone-numbers-10.txt")
     print(cost_return(numbers, dictionary))
+    # tester_loop('+4156466696')
