@@ -1,7 +1,6 @@
 from hashtable import HashTable
 import mmap
 
-
 def open_target_phone_numbers(filename):
     """opens a file with phone numbers for testing"""
     target = ('data/'+filename)
@@ -9,7 +8,7 @@ def open_target_phone_numbers(filename):
         lines = [line.rstrip('\n') for line in open(target)]
     return lines
 
-def get_costs(filename, numbers):
+def get_costs(filename):
     """Takes cost and imports into hashtable"""
     f_name=('data/'+ filename)
     result = {}
@@ -21,24 +20,21 @@ def get_costs(filename, numbers):
             values = line.split(b",")
             print(values)
             try:
-                result[str(values[0])[2:-1]] = str(values[1])[2:-4].replace("\\", "")
+                result[str(values[0])[2:-1]] = str(values[1])[2:-3].replace("\\", "")
             except:
                 break
-
         return result
-            # b'+1439799,0.09\n'
 
 
-
-def cost_return(numbers, hashtable):
+def cost_return(numbers, dic):
     """take in a phone number and return the costs based on
     the dictionary referance
         time complexity: O(n)"""
     results = []
     for num in numbers:
         for j in range(11, 0, -1):
-            if hashtable.contains(num[:j]):
-                results.append(( num, hashtable.get(num[:j])))
+            if num[:j] in dic:
+                results.append(( num, dic.get(num[:j])))
 
     if len(results) == 0:
         print("Were sorry but these numbers cannot be found, please check the number and try again")
@@ -46,6 +42,7 @@ def cost_return(numbers, hashtable):
 
 
 if __name__ == '__main__':
-    numbers = open_target_phone_numbers("phone-numbers-1000.txt")
-    dictionary = get_costs('route-costs-106000.txt', numbers)
+    numbers = open_target_phone_numbers("phone-numbers-10000.txt")
+    dictionary = get_costs('route-costs-1000000.txt')
     print(dictionary)
+    print(cost_return(numbers, dictionary))
