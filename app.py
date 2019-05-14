@@ -1,4 +1,5 @@
 from hashtable import HashTable
+import mmap
 
 
 def open_target_phone_numbers(filename):
@@ -8,34 +9,25 @@ def open_target_phone_numbers(filename):
         lines = [line.rstrip('\n') for line in open(target)]
     return lines
 
-def get_costs(filename, size):
+def get_costs(filename, numbers):
     """Takes cost and imports into hashtable"""
-    prefix_cost = HashTable(size)
     f_name=('data/'+ filename)
-    with open(f_name) as file:
-        lines = [line.rstrip('\n') for line in open(f_name)]
-        for i in lines:
-            i = i.split(',')
-            prefix_cost.set(i[0], i[1])
-        #parse lines into a hashtable
-        return prefix_cost
+    result = {}
+    with open(f_name, "r+") as file:
+        map = mmap.mmap(file.fileno(), 0)
+        line = 0
+        while line is not None:
+            line = map.readline()
+            values = line.split(b",")
+            print(values)
+            try:
+                result[str(values[0])[2:-1]] = str(values[1])[2:-4].replace("\\", "")
+            except:
+                break
 
-# def _read_routes(self, file_name):
-#     """Read route costs file into a dictionary and return the result.
-#     Runtime: Θ(n) Space: Θ(n)"""
-#     data = {}
-#     with open('data/' + file_name) as f:
-#         for line in f:
-#             row = line.strip().split(',')
-#             # if the route is already in dictionary
-#             # and the current route has a lower price,
-#             # or if the route is not in dictionary
-#             if (row[0] in data and data[row[0]] > row[1]) or (row[0] not in data):
-#                 if row[0] not in data:
-#                     self.route_costs += 1
-#                 # update/insert the route cost
-#                 data[row[0]] = row[1]
-#     return data
+        return result
+            # b'+1439799,0.09\n'
+
 
 
 def cost_return(numbers, hashtable):
@@ -52,11 +44,8 @@ def cost_return(numbers, hashtable):
         print("Were sorry but these numbers cannot be found, please check the number and try again")
     return results
 
-# def tester_loop(phone_number):
-#     for j in range(11, 0, -1):
-#         print(phone_number[:j])
 
 if __name__ == '__main__':
-    dictionary = get_costs('route-costs-106000.txt', 200000)
     numbers = open_target_phone_numbers("phone-numbers-1000.txt")
-    print(cost_return(numbers, dictionary))
+    dictionary = get_costs('route-costs-106000.txt', numbers)
+    print(dictionary)
