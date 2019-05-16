@@ -8,8 +8,8 @@ app = Flask(__name__)
 def main():
     numbers = open_target_phone_numbers("phone-numbers-10000.txt")
     dictionary = get_costs('route-costs-1000000.txt')
-    result = cost_return(numbers, dictionary)
-    return jsonify(result)
+    result = cost_return('+14105548390', dictionary)
+    return result
 
 
 if __name__ == "__main__":
