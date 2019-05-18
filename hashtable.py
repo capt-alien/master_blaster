@@ -1,4 +1,6 @@
 #!python
+# Hashtable from class work.
+
 
 from linkedlist import LinkedList
 
